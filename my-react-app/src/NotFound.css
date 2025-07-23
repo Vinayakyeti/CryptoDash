@@ -1,0 +1,223 @@
+/* 404 Not Found Page Styles */
+.not-found-container {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--background);
+  padding: 1rem;
+}
+
+.not-found-content {
+  text-align: center;
+  max-width: 32rem;
+  margin: 0 auto;
+}
+
+.not-found-code {
+  font-size: 6rem;
+  font-weight: 700;
+  color: var(--primary);
+  margin-bottom: 1rem;
+  line-height: 1;
+  background: var(--gradient-primary);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.not-found-title {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: var(--foreground);
+  margin-bottom: 0.5rem;
+}
+
+.not-found-message {
+  font-size: 1.25rem;
+  color: var(--muted-foreground);
+  margin-bottom: 2rem;
+  line-height: 1.5;
+}
+
+.not-found-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1.5rem;
+  background: var(--gradient-primary);
+  color: var(--primary-foreground);
+  border: none;
+  border-radius: var(--radius);
+  font-size: 1rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-decoration: none;
+  box-shadow: var(--shadow-crypto);
+}
+
+.not-found-button:hover {
+  opacity: 0.9;
+  transform: translateY(-2px);
+  box-shadow: 0 15px 50px -10px rgba(247, 147, 26, 0.4);
+}
+
+.not-found-button .icon {
+  width: 1rem;
+  height: 1rem;
+}
+
+/* Animated background elements */
+.not-found-bg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  overflow: hidden;
+  z-index: -1;
+}
+
+.not-found-bg::before {
+  content: '';
+  position: absolute;
+  top: 20%;
+  left: 10%;
+  width: 100px;
+  height: 100px;
+  background: radial-gradient(circle, rgba(247, 147, 26, 0.1) 0%, transparent 70%);
+  animation: float 6s ease-in-out infinite;
+}
+
+.not-found-bg::after {
+  content: '';
+  position: absolute;
+  bottom: 20%;
+  right: 10%;
+  width: 150px;
+  height: 150px;
+  background: radial-gradient(circle, rgba(251, 191, 36, 0.08) 0%, transparent 70%);
+  animation: float 8s ease-in-out infinite reverse;
+}
+
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0px) rotate(0deg);
+  }
+  50% {
+    transform: translateY(-20px) rotate(180deg);
+  }
+}
+
+/* Additional decorative elements */
+.not-found-decoration {
+  position: relative;
+}
+
+.not-found-decoration::before {
+  content: '₿';
+  position: absolute;
+  top: -2rem;
+  left: -1rem;
+  font-size: 1.5rem;
+  color: var(--primary);
+  opacity: 0.3;
+  animation: pulse 3s ease-in-out infinite;
+}
+
+.not-found-decoration::after {
+  content: 'Ξ';
+  position: absolute;
+  top: -1rem;
+  right: -1rem;
+  font-size: 1.25rem;
+  color: var(--crypto-gold);
+  opacity: 0.3;
+  animation: pulse 3s ease-in-out infinite 1.5s;
+}
+
+/* Error details section */
+.not-found-details {
+  margin-top: 2rem;
+  padding: 1rem;
+  background: var(--gradient-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  text-align: left;
+}
+
+.not-found-details-title {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--foreground);
+  margin-bottom: 0.5rem;
+}
+
+.not-found-details-text {
+  font-size: 0.75rem;
+  color: var(--muted-foreground);
+  font-family: monospace;
+  line-height: 1.4;
+  margin: 0;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .not-found-code {
+    font-size: 4rem;
+  }
+  
+  .not-found-title {
+    font-size: 1.25rem;
+  }
+  
+  .not-found-message {
+    font-size: 1rem;
+  }
+  
+  .not-found-button {
+    padding: 0.5rem 1rem;
+    font-size: 0.875rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .not-found-container {
+    padding: 0.5rem;
+  }
+  
+  .not-found-code {
+    font-size: 3rem;
+  }
+  
+  .not-found-title {
+    font-size: 1.125rem;
+  }
+  
+  .not-found-message {
+    font-size: 0.875rem;
+    margin-bottom: 1.5rem;
+  }
+  
+  .not-found-details {
+    margin-top: 1.5rem;
+    padding: 0.75rem;
+  }
+  
+  .not-found-decoration::before,
+  .not-found-decoration::after {
+    display: none;
+  }
+}
+
+/* Dark mode specific adjustments */
+@media (prefers-color-scheme: dark) {
+  .not-found-bg::before {
+    background: radial-gradient(circle, rgba(247, 147, 26, 0.05) 0%, transparent 70%);
+  }
+  
+  .not-found-bg::after {
+    background: radial-gradient(circle, rgba(251, 191, 36, 0.04) 0%, transparent 70%);
+  }
+}

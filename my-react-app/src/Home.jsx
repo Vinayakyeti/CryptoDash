@@ -5,7 +5,9 @@ import './Home.css';
 
 export default function Home() {
   const [topCoins, setTopCoins] = useState([]);
+  const [cryptoNews, setCryptoNews] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [isNewsLoading, setIsNewsLoading] = useState(true);
   const [error, setError] = useState('');
   const navigate = useNavigate();
 
@@ -22,6 +24,33 @@ export default function Home() {
     };
 
     fetchTopCoins();
+
+    // Refresh coin prices every 5 minutes (300000 ms)
+    const priceInterval = setInterval(fetchTopCoins, 300000);
+
+    return () => clearInterval(priceInterval);
+  }, []);
+
+  useEffect(() => {
+    const fetchNews = async () => {
+      setIsNewsLoading(true);
+      try {
+        const newsData = await cryptoAPI.getCryptoNews();
+        // Get the latest 6 news articles
+        setCryptoNews(newsData.slice(0, 6));
+      } catch (error) {
+        console.error("Failed to fetch crypto news:", error);
+      } finally {
+        setIsNewsLoading(false);
+      }
+    };
+
+    fetchNews();
+
+    // Refresh news every 10 minutes (600000 ms)
+    const newsInterval = setInterval(fetchNews, 600000);
+
+    return () => clearInterval(newsInterval);
   }, []);
 
   const formatPrice = (price) => {
@@ -39,6 +68,22 @@ export default function Home() {
       currency: 'USD',
       notation: 'compact',
     }).format(marketCap);
+  };
+
+  const formatNewsDate = (timestamp) => {
+    const date = new Date(timestamp * 1000);
+    const now = new Date();
+    const diffInHours = Math.floor((now - date) / (1000 * 60 * 60));
+    
+    if (diffInHours < 1) {
+      const diffInMinutes = Math.floor((now - date) / (1000 * 60));
+      return `${diffInMinutes} minute${diffInMinutes !== 1 ? 's' : ''} ago`;
+    } else if (diffInHours < 24) {
+      return `${diffInHours} hour${diffInHours !== 1 ? 's' : ''} ago`;
+    } else {
+      const diffInDays = Math.floor(diffInHours / 24);
+      return `${diffInDays} day${diffInDays !== 1 ? 's' : ''} ago`;
+    }
   };
 
   if (isLoading) {
@@ -150,27 +195,61 @@ export default function Home() {
       <section className="news-section">
         <div className="container">
           <div className="section-header">
-            <h2 className="section-title">Trending Crypto News</h2>
+            <h2 className="section-title">Latest Crypto News</h2>
             <p className="section-description">
-              Stay informed with the latest cryptocurrency developments
+              Real-time updates from the cryptocurrency world
             </p>
           </div>
 
-          <div className="news-grid">
-            {[
-              "Bitcoin reaches new all-time high amid institutional adoption",
-              "Ethereum 2.0 upgrade shows promising scalability improvements",
-              "Major banks announce cryptocurrency custody services",
-              "Regulatory clarity drives institutional investment in crypto"
-            ].map((news, index) => (
-              <div key={index} className="news-item">
-                <div className="news-content">
-                  <div className="news-indicator"></div>
-                  <p className="news-text">{news}</p>
+          {isNewsLoading ? (
+            <div className="news-grid">
+              {[1, 2, 3, 4].map((index) => (
+                <div key={index} className="news-item">
+                  <div className="news-content">
+                    <div className="loading-placeholder medium"></div>
+                    <div className="loading-placeholder small"></div>
+                  </div>
                 </div>
-              </div>
-            ))}
-          </div>
+              ))}
+            </div>
+          ) : cryptoNews.length > 0 ? (
+            <div className="news-grid">
+              {cryptoNews.map((news, index) => (
+                <a 
+                  key={news.id || index} 
+                  className="news-item" 
+                  href={news.url} 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  style={{ textDecoration: 'none', color: 'inherit' }}
+                >
+                  <div className="news-content">
+                    <div className="news-indicator"></div>
+                    <div>
+                      <p className="news-text">{news.title}</p>
+                      <div style={{ 
+                        display: 'flex', 
+                        justifyContent: 'space-between', 
+                        alignItems: 'center',
+                        marginTop: '8px',
+                        fontSize: '0.875rem',
+                        color: '#6b7280'
+                      }}>
+                        <span>{news.source_info?.name || news.source || 'Crypto News'}</span>
+                        <span>{formatNewsDate(news.published_on)}</span>
+                      </div>
+                    </div>
+                  </div>
+                </a>
+              ))}
+            </div>
+          ) : (
+            <div className="news-grid">
+              <p style={{ textAlign: 'center', color: '#6b7280' }}>
+                No news available at the moment. Please try again later.
+              </p>
+            </div>
+          )}
         </div>
       </section>
     </div>

@@ -24,7 +24,8 @@ export default function CoinChart({ coinId, currency }) {
       setIsLoading(true);
       setError('');
       try {
-        const data = await cryptoAPI.getCoinChart(coinId, currency, 7);
+        // Fetch hourly data for 1 day (24 hours)
+        const data = await cryptoAPI.getCoinChart(coinId, currency, 1);
         setChartData(data.prices);
       } catch (error) {
         setError("Failed to load chart data. Unable to fetch price chart. Please try again.");
@@ -65,7 +66,9 @@ export default function CoinChart({ coinId, currency }) {
   const data = {
     labels: chartData.map((entry) => {
       const date = new Date(entry[0]);
-      return `${date.getDate()}/${date.getMonth() + 1}`;
+      const hours = date.getHours();
+      const minutes = date.getMinutes();
+      return `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}`;
     }),
     datasets: [
       {
@@ -123,6 +126,9 @@ export default function CoinChart({ coinId, currency }) {
           font: {
             size: 12,
           },
+          maxRotation: 0,
+          autoSkip: true,
+          maxTicksLimit: 8,
         },
       },
       y: {

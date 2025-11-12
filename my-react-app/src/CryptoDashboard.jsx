@@ -14,6 +14,13 @@ export default function CryptoDashboard({ search, currency }) {
 
   useEffect(() => {
     fetchCoins();
+
+    // Refresh prices every 5 minutes (300000 ms)
+    const priceInterval = setInterval(() => {
+      fetchCoins();
+    }, 300000);
+
+    return () => clearInterval(priceInterval);
   }, [currency]);
 
   const fetchCoins = async () => {
@@ -83,7 +90,7 @@ export default function CryptoDashboard({ search, currency }) {
 
       {selectedCoinId && (
         <div className="chart-section">
-          <h2>{selectedCoinName} - 7 Day Price Chart</h2>
+          <h2>{selectedCoinName} - 24 Hour Price Chart</h2>
           <CoinChart coinId={selectedCoinId} currency={currency} />
         </div>
       )}

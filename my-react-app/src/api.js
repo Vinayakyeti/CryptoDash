@@ -62,13 +62,36 @@ export const cryptoAPI = {
   },
 
   getCoinChart: async (coinId, currency = 'usd', days = 7) => {
+    const params = {
+      vs_currency: currency,
+      days,
+    };
+    
+    // CoinGecko automatically uses hourly data for days=1
+    // Only add interval for multi-day requests
+    if (days > 1) {
+      params.interval = 'daily';
+    }
+    
     const response = await axios.get(`https://api.coingecko.com/api/v3/coins/${coinId}/market_chart`, {
-      params: {
-        vs_currency: currency,
-        days,
-        interval: 'daily',
-      },
+      params,
     });
     return response.data;
+  },
+
+  getCryptoNews: async () => {
+    try {
+      // Using CryptoCompare News API (free tier)
+      const response = await axios.get('https://min-api.cryptocompare.com/data/v2/news/?lang=EN', {
+        params: {
+          categories: 'BTC,ETH,Trading,Blockchain',
+        },
+      });
+      return response.data.Data || [];
+    } catch (error) {
+      console.error('Error fetching crypto news:', error);
+      // Fallback to empty array if API fails
+      return [];
+    }
   },
 };

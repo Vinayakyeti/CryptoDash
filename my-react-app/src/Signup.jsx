@@ -31,7 +31,8 @@ export default function Signup() {
       const data = await authAPI.signup(email, password);
       authAPI.setToken(data.token);
       localStorage.setItem('userEmail', email);
-      navigate('/');
+      // Small delay to ensure token is set before navigating
+      setTimeout(() => navigate('/dashboard'), 100);
     } catch (error) {
       setError(error.response?.data?.msg || "Failed to create account. Please try again.");
     } finally {

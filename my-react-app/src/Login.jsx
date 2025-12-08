@@ -19,7 +19,8 @@ export default function Login() {
       const data = await authAPI.login(email, password);
       authAPI.setToken(data.token);
       localStorage.setItem('userEmail', email);
-      navigate('/');
+      // Small delay to ensure token is set before navigating
+      setTimeout(() => navigate('/dashboard'), 100);
     } catch (error) {
       setError(error.response?.data?.msg || "Invalid credentials. Please try again.");
     } finally {

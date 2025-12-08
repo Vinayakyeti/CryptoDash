@@ -71,18 +71,18 @@ export default function CryptoDashboard({ search, currency }) {
               <img src={coin.image} alt={coin.name} className="coin-logo" />
               <div>
                 <h2>{coin.name}</h2>
-                <p>{coin.symbol.toUpperCase()}</p>
+                <p>{coin.symbol?.toUpperCase() || 'N/A'}</p>
               </div>
             </div>
             <p>
-              Price: {coin.current_price} {currency.toUpperCase()}
+              Price: {coin.current_price || 'N/A'} {currency.toUpperCase()}
             </p>
             <p
               className={
                 coin.price_change_percentage_24h >= 0 ? "positive" : "negative"
               }
             >
-              24h Change: {coin.price_change_percentage_24h.toFixed(2)}%
+              24h Change: {coin.price_change_percentage_24h ? coin.price_change_percentage_24h.toFixed(2) : 'N/A'}%
             </p>
           </div>
         ))}
